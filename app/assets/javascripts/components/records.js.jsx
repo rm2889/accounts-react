@@ -11,17 +11,49 @@ var Records = React.createClass({
 	},
 
 	addRecord: function(record) {
-		console.log(this.state.records);
 		var records=this.state.records.slice();
-		console.log(records);
 		records.push(record);
 		this.setState({records: records});
+	},
+
+	credits: function() {
+		return this.state.records.reduce(function(prev, curr) {			
+			if (curr.amount > 0) {
+				return prev + curr.amount;
+			} else {
+				return prev;
+			}
+		},0);
+	},
+
+	debits: function() {
+		return this.state.records.reduce(function(prev,curr){
+			if (curr.amount < 0) {
+				return prev + curr.amount;
+			}
+			else {
+				return prev;
+			}
+		}, 0);
+	},
+
+	amount: function() {
+		return this.debits() + this.credits();
+	},
+
+	deleteRecord: function(record) {
+		var records = this.state.records.slice();
+		records.splice(records.indexOf(record),1);
+		this.replaceState({records: records});
 	},
 
 	render: function() {
 		return (
 			<div className="records">
 			<h2 className="title">Records</h2>
+			<AmountBox type="success" text="Credits" amount={this.credits()} />
+			<AmountBox type="danger" text="Debits" amount={this.debits()} />
+			<AmountBox type="info" text="Balance" amount={this.amount()} />
 			<RecordForm handleNewRecord={this.addRecord}/>
 			<table className="table-hover table">
 			<thead>
@@ -29,12 +61,13 @@ var Records = React.createClass({
 			<th>Date</th>
 			<th>Title</th>
 			<th>Amount</th>
+			<th>Actions</th>
 			</tr>
 			</thead>
 			<tbody>
 			{this.state.records.map(function(record) {
-				return <Record key={record.id} record={record} />
-			})}
+				return <Record key={record.id} record={record} handleDeleteRecord={this.deleteRecord}/>
+			}.bind(this))}
 			</tbody>
 			</table>
 			</div>

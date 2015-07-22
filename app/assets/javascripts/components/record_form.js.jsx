@@ -29,7 +29,6 @@ var RecordForm = React.createClass({
 		ajaxRequest.done(function(response){
 			this.props.handleNewRecord(response);
 			this.setState(this.getInitialState());
-			console.log(response);
 		}.bind(this)
 		);
 		ajaxRequest.fail(function(response){
