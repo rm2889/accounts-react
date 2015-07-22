@@ -9,10 +9,20 @@ var Records = React.createClass({
 			records: []
 		}
 	},
+
+	addRecord: function(record) {
+		console.log(this.state.records);
+		var records=this.state.records.slice();
+		console.log(records);
+		records.push(record);
+		this.setState({records: records});
+	},
+
 	render: function() {
 		return (
 			<div className="records">
 			<h2 className="title">Records</h2>
+			<RecordForm handleNewRecord={this.addRecord}/>
 			<table className="table-hover table">
 			<thead>
 			<tr>
